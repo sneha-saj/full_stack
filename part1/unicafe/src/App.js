@@ -1,16 +1,44 @@
 import { useState } from 'react'
+
+const StatisticLine =  (props) => {
+  if(props.text=="good")
+  return (
+    <p>good {props.value}</p>
+  )
+  if(props.text=="neutral")
+  return (
+    <p>neutral {props.value}</p>
+  )
+  if(props.text=="bad")
+  return (
+    <p>bad {props.value}</p>
+  )
+  if(props.text=="all")
+  return (
+    <p>all {props.value}</p>
+  ) 
+  if(props.text=="average")
+  return (
+    <p>average {props.value}</p>
+  ) 
+  if(props.text=="positive")
+  return (
+    <p>positive {props.value}%</p>
+  )
+
+}
 const Statistics = (props) => {
   if(props.good || props.bad || props.neutral)
   return (
     
     <div>
       <h1>statistics</h1>
-      <p>good {props.good}</p>
-      <p>neutral {props.neutral}</p>
-      <p>bad {props.bad}</p>
-      <p>all {props.good+props.bad+props.neutral}</p>
-      <p>average {(props.good-props.bad)/(props.good+props.bad+props.neutral)}</p>
-      <p>positive {props.good/(props.good+props.bad+props.neutral)*100}%</p>
+      <StatisticLine text= "good" value = {props.good}/>
+      <StatisticLine text= "neutral" value = {props.neutral}/>
+      <StatisticLine text= "bad" value = {props.bad}/>
+      <StatisticLine text= "all" value = {props.good+props.bad+props.neutral}/>
+      <StatisticLine text= "average" value = {(props.good-props.bad)/(props.good+props.bad+props.neutral)}/>
+      <StatisticLine text= "positive" value = {props.good/(props.good+props.bad+props.neutral)*100}/>
     </div>
   )
   return (
@@ -20,6 +48,15 @@ const Statistics = (props) => {
     <p>No feedback given</p>
     
   </div>
+  )
+}
+const Button = (props) => {
+  return (
+    <div>
+      <button onClick={props.incGood}>good</button> 
+      <button onClick={props.incNeutral}>neutral</button>
+      <button onClick={props.incBad}>bad</button>
+    </div>
   )
 }
 const App = () => {
@@ -51,9 +88,7 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      <button onClick={incGood}>good</button> 
-      <button onClick={incNeutral}>neutral</button>
-      <button onClick={incBad}>bad</button>
+      <Button incGood = {incGood} incBad={incBad} incNeutral={incNeutral}/>
       <Statistics good={good} bad={bad} neutral={neutral}/>
   
     </div>
