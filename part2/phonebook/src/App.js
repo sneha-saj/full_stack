@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import Persons from './Components/Persons.js'; 
-import PersonForm from './Components/PersonForm.js'; 
-import Filter from './Components/Filter.js'; 
+import React, { useState, useEffect } from 'react';
+import Persons from "./Components/Persons.js";
+import PersonForm from "./Components/PersonForm.js";
+import Filter from "./Components/Filter.js";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch('http://localhost:3001/persons')
-      .then(response => response.json())
-      .then(data => setPersons(data));
+    fetch("http://localhost:3001/persons")
+      .then((response) => response.json())
+      .then((data) => setPersons(data));
   }, []);
 
   const handleNameChange = (event) => {
@@ -31,16 +31,32 @@ const App = () => {
     event.preventDefault();
 
     // Check if the name already exists
-    const isNameExists = persons.some((person) => person.name.toLowerCase() === newName.toLowerCase());
+    const isNameExists = persons.some(
+      (person) => person.name.toLowerCase() === newName.toLowerCase()
+    );
 
     if (isNameExists) {
-      // Issue an error message
       alert(`${newName} is already added to phonebook`);
     } else {
-      const person = { name: newName, number: newNumber, id: persons.length + 1 };
-      setPersons([...persons, person]);
-      setNewName('');
-      setNewNumber('');
+      const person = { name: newName, number: newNumber };
+
+      // Send a POST request to the server to add the person
+      fetch("http://localhost:3001/persons", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(person),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setPersons([...persons, data]); 
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((error) => {
+          console.log("Error:", error);
+        });
     }
   };
 
