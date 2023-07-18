@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import Persons from './Components/Persons.js'; 
+import PersonForm from './Components/PersonForm.js'; 
+import Filter from './Components/Filter.js'; 
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -27,12 +30,14 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
 
+    // Check if the name already exists
     const isNameExists = persons.some((person) => person.name.toLowerCase() === newName.toLowerCase());
 
     if (isNameExists) {
+      // Issue an error message
       alert(`${newName} is already added to phonebook`);
     } else {
-      const person = { name: newName, number: newNumber };
+      const person = { name: newName, number: newNumber, id: persons.length + 1 };
       setPersons([...persons, person]);
       setNewName('');
       setNewNumber('');
@@ -46,28 +51,22 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        Filter by name: <input value={searchTerm} onChange={handleSearch} />
-      </div>
-      <form onSubmit={addPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNameChange} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul>
-        {filteredPersons.map((person) => (
-          <li key={person.id}>
-            {person.name} - {person.number}
-          </li>
-        ))}
-      </ul>
+
+      <Filter searchTerm={searchTerm} handleSearch={handleSearch} />
+
+      <h3>Add a new</h3>
+
+      <PersonForm
+        newName={newName}
+        newNumber={newNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        addPerson={addPerson}
+      />
+
+      <h3>Numbers</h3>
+
+      <Persons persons={filteredPersons} />
     </div>
   );
 };
