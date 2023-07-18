@@ -1,19 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import Persons from './Components/Persons';
-import PersonForm from './Components/PersonForm';
-import Filter from './Components/Filter';
-import phonebookService from './Components/PhoneBookService';
+import React, { useState, useEffect } from "react";
+import Persons from "./Components/Persons";
+import PersonForm from "./Components/PersonForm";
+import Filter from "./Components/Filter";
+import phonebookService from "./Components/PhoneBookService";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    phonebookService.getAll()
-      .then(response => setPersons(response.data))
-      .catch(error => console.log('Error:', error));
+    phonebookService
+      .getAll()
+      .then((response) => setPersons(response.data))
+      .catch((error) => console.log("Error:", error));
   }, []);
 
   const handleNameChange = (event) => {
@@ -31,20 +32,36 @@ const App = () => {
   const addPerson = (event) => {
     event.preventDefault();
 
-    const isNameExists = persons.some((person) => person.name.toLowerCase() === newName.toLowerCase());
+    const isNameExists = persons.some(
+      (person) => person.name.toLowerCase() === newName.toLowerCase()
+    );
 
     if (isNameExists) {
       alert(`${newName} is already added to phonebook`);
     } else {
       const newPerson = { name: newName, number: newNumber };
 
-      phonebookService.create(newPerson)
-        .then(response => {
+      phonebookService
+        .create(newPerson)
+        .then((response) => {
           setPersons([...persons, response.data]);
-          setNewName('');
-          setNewNumber('');
+          setNewName("");
+          setNewNumber("");
         })
-        .catch(error => console.log('Error:', error));
+        .catch((error) => console.log("Error:", error));
+    }
+  };
+
+  const deletePerson = (id) => {
+    const personToDelete = persons.find((person) => person.id === id);
+
+    if (personToDelete && window.confirm(`Delete ${personToDelete.name}?`)) {
+      phonebookService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+        })
+        .catch((error) => console.log("Error:", error));
     }
   };
 
@@ -70,7 +87,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} deletePerson={deletePerson} />
     </div>
   );
 };

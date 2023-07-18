@@ -10,6 +10,10 @@ const create = (newPerson) => {
   return axios.post(baseUrl, newPerson);
 };
 
+const remove = (id) => {
+  return axios.delete(`${baseUrl}/${id}`);
+};
+
 const update = (id, updatedPerson) => {
   return axios.put(`${baseUrl}/${id}`, updatedPerson);
 };
@@ -17,6 +21,7 @@ const update = (id, updatedPerson) => {
 const phonebookService = {
   getAll,
   create,
+  remove,
   update,
 };
 
