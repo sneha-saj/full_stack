@@ -3,12 +3,16 @@ import Persons from "./Components/Persons";
 import PersonForm from "./Components/PersonForm";
 import Filter from "./Components/Filter";
 import phonebookService from "./Components/PhoneBookService";
+import './index.css';
+import Notification from './Components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     phonebookService
@@ -48,8 +52,15 @@ const App = () => {
             setPersons(persons.map((person) => (person.id === existingPerson.id ? response.data : person)));
             setNewName("");
             setNewNumber("");
+            setSuccessMessage(`Number updated for ${existingPerson.name}`);
+            setTimeout(() => {
+              setSuccessMessage(null);
+            }, 3000);
           })
-          .catch((error) => console.log("Error:", error));
+          .catch((error) => {
+            setErrorMessage("Failed to update the person's number.");
+            console.log("Error:", error);
+          });
       }
     } else {
       const newPerson = { name: newName, number: newNumber };
@@ -60,8 +71,15 @@ const App = () => {
           setPersons([...persons, response.data]);
           setNewName("");
           setNewNumber("");
+          setSuccessMessage(`Added ${response.data.name}`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 3000);
         })
-        .catch((error) => console.log("Error:", error));
+        .catch((error) => {
+          setErrorMessage("Failed to create a new person.");
+          console.log("Error:", error);
+        });
     }
   };
   
@@ -74,8 +92,15 @@ const App = () => {
         .remove(id)
         .then(() => {
           setPersons(persons.filter((person) => person.id !== id));
+          setSuccessMessage(`Deleted ${personToDelete.name}`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 3000);
         })
-        .catch((error) => console.log("Error:", error));
+        .catch((error) => {
+          setErrorMessage("Failed to delete the person.");
+          console.log("Error:", error);
+        });
     }
   };
 
@@ -86,6 +111,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      {errorMessage && <Notification message={errorMessage} isError={true} />}
+      {successMessage && <Notification message={successMessage} />}
 
       <Filter searchTerm={searchTerm} handleSearch={handleSearch} />
 
