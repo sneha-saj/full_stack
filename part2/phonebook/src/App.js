@@ -58,8 +58,12 @@ const App = () => {
             }, 3000);
           })
           .catch((error) => {
-            setErrorMessage("Failed to update the person's number.");
-            console.log("Error:", error);
+            if (error.response && error.response.status === 404) {
+              setErrorMessage('The person has already been removed.');
+            } else {
+              setErrorMessage('Failed to update the person\'s number.');
+              console.log('Error:', error);
+            }
           });
       }
     } else {
@@ -98,8 +102,11 @@ const App = () => {
           }, 3000);
         })
         .catch((error) => {
-          setErrorMessage("Failed to delete the person.");
-          console.log("Error:", error);
+          setErrorMessage('Failed to delete the person.');
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+          console.log('Error:', error);
         });
     }
   };
