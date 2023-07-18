@@ -31,16 +31,29 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault();
-
-    const isNameExists = persons.some(
-      (person) => person.name.toLowerCase() === newName.toLowerCase()
-    );
-
-    if (isNameExists) {
-      alert(`${newName} is already added to phonebook`);
+  
+    const existingPerson = persons.find((person) => person.name.toLowerCase() === newName.toLowerCase());
+  
+    if (existingPerson) {
+      const confirmUpdate = window.confirm(
+        `${existingPerson.name} is already added to the phonebook. Do you want to update the number?`
+      );
+  
+      if (confirmUpdate) {
+        const updatedPerson = { ...existingPerson, number: newNumber };
+  
+        phonebookService
+          .update(existingPerson.id, updatedPerson)
+          .then((response) => {
+            setPersons(persons.map((person) => (person.id === existingPerson.id ? response.data : person)));
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch((error) => console.log("Error:", error));
+      }
     } else {
       const newPerson = { name: newName, number: newNumber };
-
+  
       phonebookService
         .create(newPerson)
         .then((response) => {
@@ -51,6 +64,7 @@ const App = () => {
         .catch((error) => console.log("Error:", error));
     }
   };
+  
 
   const deletePerson = (id) => {
     const personToDelete = persons.find((person) => person.id === id);
