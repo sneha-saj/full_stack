@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const CountryInfo = ({ country }) => {
-  const { name, capital, population, area, languages, flag } = country;
+  const { name, capital, population, area, languages, flag, flags } = country;
 
   return (
     <div>
@@ -14,22 +14,30 @@ const CountryInfo = ({ country }) => {
       <ul>
         {Object.entries(languages).map(([code, language]) => (
           <li key={code}>
-            {language.name} ({language.nativeName})
+            {language}
           </li>
         ))}
       </ul>
-    </div>
+      <h3>Flag</h3>
+      {flags.png ? (
+        <img src={flags.png} alt={`${name.common} Flag`} style={{ maxWidth: '200px' }} />
+      ) : (
+        <span>{flag}</span>
+      )}    </div>
   );
 };
 
-
 const CountryList = ({ countries, handleShowCountry }) => {
+  if (countries.length > 10) {
+    return <p>Too many matches, specify another filter.</p>;
+  }
+
   return (
     <ul>
       {countries.map((country) => (
-        <li key={country.alpha3Code}>
-          {country.name}{' '}
-          <button onClick={() => handleShowCountry(country.alpha3Code)}>
+        <li key={country.cca3}>
+          {country.name.common}{' '}
+          <button onClick={() => handleShowCountry(country.cca3)}>
             Show
           </button>
         </li>
@@ -60,9 +68,9 @@ const App = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleShowCountry = (alpha3Code) => {
+  const handleShowCountry = (cca3) => {
     const countryToShow = countries.find(
-      (country) => country.alpha3Code === alpha3Code
+      (country) => country.cca3 === cca3
     );
     setShowCountry(countryToShow);
   };
