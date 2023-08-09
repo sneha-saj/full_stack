@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const CountryInfo = ({ country }) => {
   const { name, capital, population, area, languages, flag, flags } = country;
@@ -13,17 +13,20 @@ const CountryInfo = ({ country }) => {
       <h3>Languages</h3>
       <ul>
         {Object.entries(languages).map(([code, language]) => (
-          <li key={code}>
-            {language}
-          </li>
+          <li key={code}>{language}</li>
         ))}
       </ul>
       <h3>Flag</h3>
       {flags.png ? (
-        <img src={flags.png} alt={`${name.common} Flag`} style={{ maxWidth: '200px' }} />
+        <img
+          src={flags.png}
+          alt={`${name.common} Flag`}
+          style={{ maxWidth: "200px" }}
+        />
       ) : (
         <span>{flag}</span>
-      )}    </div>
+      )}{" "}
+    </div>
   );
 };
 
@@ -36,10 +39,8 @@ const CountryList = ({ countries, handleShowCountry }) => {
     <ul>
       {countries.map((country) => (
         <li key={country.cca3}>
-          {country.name.common}{' '}
-          <button onClick={() => handleShowCountry(country.cca3)}>
-            Show
-          </button>
+          {country.name.common}{" "}
+          <button onClick={() => handleShowCountry(country.cca3)}>Show</button>
         </li>
       ))}
     </ul>
@@ -48,7 +49,7 @@ const CountryList = ({ countries, handleShowCountry }) => {
 
 const App = () => {
   const [countries, setCountries] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [showCountry, setShowCountry] = useState(null);
 
   useEffect(() => {
@@ -60,7 +61,7 @@ const App = () => {
         setShowCountry(null);
       })
       .catch((error) => {
-        console.log('Error:', error);
+        console.log("Error:", error);
       });
   }, [searchTerm]);
 
@@ -69,9 +70,7 @@ const App = () => {
   };
 
   const handleShowCountry = (cca3) => {
-    const countryToShow = countries.find(
-      (country) => country.cca3 === cca3
-    );
+    const countryToShow = countries.find((country) => country.cca3 === cca3);
     setShowCountry(countryToShow);
   };
 
@@ -84,7 +83,6 @@ const App = () => {
         onChange={handleSearch}
         placeholder="Search country..."
       />
-
       {showCountry ? (
         <CountryInfo country={showCountry} />
       ) : (
