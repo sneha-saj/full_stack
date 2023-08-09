@@ -24,3 +24,4 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 part2/phonebook/package-lock.json
+some.md
