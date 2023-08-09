@@ -1,51 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-
-const CountryInfo = ({ country }) => {
-  const { name, capital, population, area, languages, flag, flags } = country;
-
-  return (
-    <div>
-      <h2>{name.common}</h2>
-      <p>Capital: {capital[0]}</p>
-      <p>Population: {population}</p>
-      <p>Area: {area} km²</p>
-      <h3>Languages</h3>
-      <ul>
-        {Object.entries(languages).map(([code, language]) => (
-          <li key={code}>{language}</li>
-        ))}
-      </ul>
-      <h3>Flag</h3>
-      {flags.png ? (
-        <img
-          src={flags.png}
-          alt={`${name.common} Flag`}
-          style={{ maxWidth: "200px" }}
-        />
-      ) : (
-        <span>{flag}</span>
-      )}{" "}
-    </div>
-  );
-};
-
-const CountryList = ({ countries, handleShowCountry }) => {
-  if (countries.length > 10) {
-    return <p>Too many matches, specify another filter.</p>;
-  }
-
-  return (
-    <ul>
-      {countries.map((country) => (
-        <li key={country.cca3}>
-          {country.name.common}{" "}
-          <button onClick={() => handleShowCountry(country.cca3)}>Show</button>
-        </li>
-      ))}
-    </ul>
-  );
-};
+import CountryInfo from "./components/countryInfo";
+import CountryList from "./components/countryList";
 
 const App = () => {
   const [countries, setCountries] = useState([]);
