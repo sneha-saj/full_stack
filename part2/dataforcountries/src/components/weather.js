@@ -1,40 +1,52 @@
-import React, { useState, useEffect } from "react"
-import axios from 'axios' 
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const Weather = ({capital}) => {
-    const [weather, setWeather] = useState({
-                                    temp : null,
-                                    img  : [],
-                                    wind : null,
-                                    dir  : null,
-                                })
-                                
-    const weather_api_key = process.env.REACT_APP_WEATHER_API_KEY
-    console.log('sf',weather_api_key);
-    useEffect(() => {
-        axios
-          .get(`http://api.weatherstack.com/current?access_key=${weather_api_key}&query=${capital}`)
-          .then(response => {
-            console.log('ee',response.data);
-            setWeather({
-                temp : response.data.current.temperature,
-                img  : response.data.current.weather_icons,
-                wind : response.data.current.wind_speed,
-                dir  : response.data.current.wind_speed.wind_dir,
-            })
-          })
-      }, [weather_api_key, capital])
+const Weather = ({ capital, latlng }) => {
+  const [weather, setWeather] = useState({
+    temp: null,
+    img: [],
+    wind: null,
+    dir: null,
+  });
+  // https://api.openweathermap.org/data/3.0/onecall?lat=64&lon=26&appid=f4f812ef7988efdcb327e8b2fbdef92c
+  const weather_api_key = process.env.REACT_APP_WEATHER_API_KEY;
+  useEffect(() => {
+    axios
+      .get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${weather_api_key}`
+      )
+      .then((response) => {
+        setWeather({
+          temp: response.data.main.temp,
+          img: response.data.weather[0].icon,
+          wind: response.data.wind.speed,
+          deg: response.data.wind.deg,
+          hum: response.data.main.humidity,
+        });
+      });
+  }, [weather_api_key, latlng]);
 
-    return (
-        <>
-            <h3>Weather in {capital}</h3>
-            <div><strong>temperature:</strong> {weather.temp} Celcius</div>
-            <div>
-                {weather.img.map((img) => <img key={img} src={img} alt='Icon' />)}
-            </div>
-            <div><strong>wind:</strong> {weather.wind} mph direction {weather.dir}</div> 
-        </>
-    )
-}
+  return (
+    <>
+      <h3>Weather in {capital}</h3>
+      <div>
+        <strong>temperature:</strong> {weather.temp} Celcius
+      </div>
+      <div>
+        <strong>wind:</strong> {weather.wind} mph, degree {weather.deg}
+      </div>
+      <div>
+        <strong>humidity:</strong> {weather.hum}g/m3
+      </div>
+      <div>
+        <img
+          key={weather.img}
+          src={`https://openweathermap.org/img/wn/${weather.img}@2x.png`}
+          alt="Icon"
+        />
+      </div>
+    </>
+  );
+};
 
-export default Weather
+export default Weather;

@@ -3,13 +3,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Weather from './weather';
 const CountryInfo = ({ country }) => {
-  const { name, capital, population, area, languages, flags, flag } = country;
-
+  const { name, capital, latlng, population, area, languages, flags, flag } = country;
   return (
     <div>
       <h2>{name.common}</h2>
       <p>Capital: {capital[0]}</p>
-      <Weather capital={capital[0]} />
       <p>Population: {population}</p>
       <p>Area: {area} km²</p>
       <h3>Languages</h3>
@@ -28,6 +26,8 @@ const CountryInfo = ({ country }) => {
       ) : (
         <span>{flag}</span>
       )}
+            <Weather latlng={latlng} capital={capital}/>
+
     </div>
   );
 };

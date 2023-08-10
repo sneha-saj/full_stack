@@ -12,7 +12,6 @@ const App = () => {
     axios
       .get(`https://restcountries.com/v3.1/name/${searchTerm}`)
       .then((response) => {
-        console.log(response.data);
         setCountries(response.data);
         setShowCountry(null);
       })
