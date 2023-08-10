@@ -2,6 +2,13 @@ const express = require("express");
 const moment = require("moment-timezone");
 const app = express();
 const PORT = 3001;
+app.use(express.json()); 
+
+function generateUniqueId() {
+    const min = 1;
+    const max = 1000000; 
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
 let persons = [
   { id: 1, name: "Arto Hellas", phone: "040-123456" },
@@ -30,6 +37,23 @@ app.delete('/api/persons/:id', (req, res) => {
     persons = persons.filter(person => person.id !== id);
     res.status(204).end();
 });
+
+app.post("/api/persons", (req, res) => {
+    const body = req.body;
+    console.log('sd',req.body);
+    if (!body.name || !body.phone) {
+      return res.status(400).json({ error: "Name and phone are required" });
+    }
+  
+    const newPerson = {
+      id: generateUniqueId(),
+      name: body.name,
+      phone: body.phone,
+    };
+  
+    persons.push(newPerson);
+    res.status(201).json(newPerson);
+  });
 
 app.get("/info", (req, res) => {
   const currentTime = moment()
