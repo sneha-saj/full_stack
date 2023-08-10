@@ -14,6 +14,18 @@ app.get("/api/persons", (req, res) => {
   res.json(persons);
 });
 
+app.get('/api/persons/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const person = persons.find(person => person.id === id);
+  
+    if (!person) {
+      return res.status(404).json({ error: 'Person not found' });
+    }
+  
+    res.json(person);
+  });
+  
+
 app.get("/info", (req, res) => {
   const currentTime = moment()
     .tz("Europe")
