@@ -3,7 +3,7 @@ const moment = require("moment-timezone");
 const app = express();
 const PORT = 3001;
 
-const persons = [
+let persons = [
   { id: 1, name: "Arto Hellas", phone: "040-123456" },
   { id: 2, name: "Ada Lovelace", phone: "99-44-5323523" },
   { id: 3, name: "Dan Abramov", phone: "12-43-234345" },
@@ -24,11 +24,16 @@ app.get('/api/persons/:id', (req, res) => {
   
     res.json(person);
   });
-  
+
+app.delete('/api/persons/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    persons = persons.filter(person => person.id !== id);
+    res.status(204).end();
+});
 
 app.get("/info", (req, res) => {
   const currentTime = moment()
-    .tz("Europe")
+    .tz("Europe/Istanbul")
     .format("ddd MMM DD YYYY HH:mm:ss ZZ");
   const numPersons = persons.length;
   res.send(`
