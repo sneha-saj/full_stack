@@ -40,9 +40,14 @@ app.delete('/api/persons/:id', (req, res) => {
 
 app.post("/api/persons", (req, res) => {
     const body = req.body;
-    console.log('sd',req.body);
+  
     if (!body.name || !body.phone) {
-      return res.status(400).json({ error: "Name and phone are required" });
+      return res.status(400).json({ error: "name and phone are required" });
+    }
+  
+    const existingPerson = persons.find(person => person.name === body.name);
+    if (existingPerson) {
+      return res.status(409).json({ error: "name must be unique" });
     }
   
     const newPerson = {
@@ -54,7 +59,7 @@ app.post("/api/persons", (req, res) => {
     persons.push(newPerson);
     res.status(201).json(newPerson);
   });
-
+  
 app.get("/info", (req, res) => {
   const currentTime = moment()
     .tz("Europe/Istanbul")
