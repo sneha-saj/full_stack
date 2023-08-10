@@ -5,7 +5,20 @@ const app = express();
 const PORT = 3001;
 
 app.use(express.json()); 
-app.use(morgan("tiny"));
+
+morgan.token("req-body", (req) => {
+    return JSON.stringify(req.body);
+  });
+    app.use(
+    morgan(
+      ':method :url :status :response-time ms - :req-body',
+      {
+        skip: (req, res) => res.statusCode < 400,
+      }
+    )
+  );
+
+  
 
 function generateUniqueId() {
     const min = 1;
