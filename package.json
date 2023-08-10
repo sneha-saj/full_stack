@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/Sneha0104/full_stack#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
